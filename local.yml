@@ -1,0 +1,56 @@
+- name: "Ansible-pull playbook for installing the Chat Web Service"
+  hosts: localhost
+  connection: local
+  vars:
+    github_repo: https://github.com/martin-kuba/muni-pa160-chat-service
+    github_release: v1.0.5
+  tasks:
+    - name: "install java runtime"
+      package:
+        name: openjdk-11-jre-headless
+        state: present
+
+    - name: "create unprivileged user for running"
+      user:
+        name: chat
+        state: present
+        password: '!'
+        shell: /bin/bash
+
+    - name: "download chat service"
+      get_url:
+        url: "{{ github_repo } }/releases/download/{{ github_release }}/pa160_chat_service.jar"
+        dest: /opt/pa160_chat_service.jar
+
+    - name: "create systemd service file"
+      copy:
+        dest: /etc/systemd/system/chat.service
+        content: |
+          [Unit]
+          Description=Chat Standalone Service
+          [Service]
+          User=chat
+          WorkingDirectory=/opt/
+          ExecStart=/usr/bin/java -jar /opt/pa160_chat_service.jar
+          TimeoutStopSec=120s
+          [Install]
+          WantedBy=multi-user.target
+      register: systemd_file
+
+    - name: "reload systemd"
+      when: systemd_file.changed
+      systemd:
+        daemon_reload: yes
+
+    - name: "enable chat service after reboot"
+      systemd:
+        name: chat
+        enabled: yes
+
+    - name: "start chat service"
+      systemd:
+        name: chat
+        state: started
+
+
+
