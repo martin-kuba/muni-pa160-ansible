@@ -19,7 +19,7 @@
 
     - name: "download chat service"
       get_url:
-        url: "{{ github_repo } }/releases/download/{{ github_release }}/pa160_chat_service.jar"
+        url: "{{ github_repo }}/releases/download/{{ github_release }}/pa160_chat_service.jar"
         dest: /opt/pa160_chat_service.jar
 
     - name: "create systemd service file"
