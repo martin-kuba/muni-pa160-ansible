@@ -52,5 +52,12 @@
         name: chat
         state: started
 
+    - name: "create cron job for ansible-pull"
+      cron:
+        name: "Every five minutes run ansible-pull"
+        cron_file: ansible-pull
+        minute: "*/5"
+        user: root
+        job: "ansible-pull -U https://github.com/martin-kuba/muni-pa160-ansible.git"
 
 
