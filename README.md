@@ -1,7 +1,7 @@
 # muni-pa160-ansible
 Example of ansible-pull for the course PA160 at Masaryk University
 
-Create a Debian 10 virtual machine in cloud with public IP address.
+Create a Debian 10 virtual machine in cloud with public IP address and a firewall rule **allowing incoming traffic to TCP port 8080**.
 
 Start managing it with Ansible pull by issuing the following commands as root on it:
 ```bash
